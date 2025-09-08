@@ -23,7 +23,7 @@ public class OrderDTO implements Serializable {
 
     private UUID id;
 
-    private List<OrderProduct> produtos;
+    private List<OrderProductDTO> produtos;
 
     private Integer quantidade;
 

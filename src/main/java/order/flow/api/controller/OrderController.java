@@ -1,8 +1,11 @@
 package order.flow.api.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +31,11 @@ public class OrderController {
     public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderDTO orderDTO) throws Exception{
 
         return ResponseEntity.ok(orderService.create(orderDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() throws Exception{
+
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 }

@@ -1,6 +1,7 @@
 package order.flow.api.aplication.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -30,35 +31,53 @@ public class OrderService {
 
     @Transactional
     public OrderDTO create(CreateOrderDTO createOrderDTO) {
-        // 1. Cria o pedido com status PENDENTE
+        if (createOrderDTO == null || createOrderDTO.getProdutos() == null || createOrderDTO.getProdutos().isEmpty()) {
+                throw new IllegalArgumentException("A lista de produtos não pode ser vazia.");
+        }
+
         Order order = Order.builder()
                 .status(Status.PENDENTE)
                 .build();
 
-        // 2. Monta os OrderProducts a partir dos IDs
+        List<UUID> productIds = createOrderDTO.getProdutos().stream()
+                .map(CreateOrderDTO.ProductRequest::getProductId)
+                .toList();
+
+        List<Product> produtos = productRepository.findAllById(productIds);
+        if (produtos.size() != productIds.size()) {
+                throw new RuntimeException("Um ou mais produtos não foram encontrados.");
+        }
+
         List<OrderProduct> orderProducts = createOrderDTO.getProdutos().stream()
                 .map(req -> {
-                    Product product = productRepository.findById(req.getProductId())
-                            .orElseThrow(() -> new RuntimeException(
-                                    "Produto não encontrado: " + req.getProductId()));
+                        Product product = produtos.stream()
+                                .filter(p -> p.getId().equals(req.getProductId()))
+                                .findFirst()
+                                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + req.getProductId()));
 
-                    OrderProduct op = OrderProduct.builder()
-                            .product(product)
-                            .quantidade(req.getQuantidade())
-                            .precoUnitario(product.getPreco())
-                            .order(order)
-                            .build();
-                    return op;
+                        return OrderProduct.builder()
+                                .order(order)
+                                .product(product)
+                                .quantidade(req.getQuantidade())
+                                .precoUnitario(product.getPreco())
+                                .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         order.setProdutos(orderProducts);
 
-        // 3. Salva o pedido
         Order savedOrder = orderRepository.save(order);
 
-        // 4. Converte para DTO (com total e quantidade calculados)
         return OrderMapper.toDto(savedOrder);
+    }
+
+    public List<OrderDTO> getAllOrders() {
+        // TODO Auto-generated method stub
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+                .map(OrderMapper::toDto)
+                .collect(Collectors.toList());
+
     }
 
 }
