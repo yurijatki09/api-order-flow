@@ -55,10 +55,14 @@ public class Product {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
+    @Column(name = "ativo")
+    private Boolean ativo;
+
     @PrePersist
     public void prePersist() {
         this.dataCriacao = LocalDateTime.now();
         this.dataAtualizacao = LocalDateTime.now();
+        this.ativo = Boolean.TRUE;
     }
 
     @PreUpdate

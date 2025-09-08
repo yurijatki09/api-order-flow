@@ -3,6 +3,7 @@ package order.flow.api.aplication.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,29 +12,26 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import order.flow.api.domain.model.Category;
+import order.flow.api.domain.model.OrderProduct;
+import order.flow.api.domain.model.Status;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude
-public class ProductDTO implements Serializable {
-    
+public class OrderDTO implements Serializable {
+
     private UUID id;
 
-    private String nome;
-
-    private String descricao;
-
-    private BigDecimal preco;
-
-    private Category categoria;
+    private List<OrderProduct> produtos;
 
     private Integer quantidade;
 
-    private LocalDateTime dataCriacao;
+    private BigDecimal total;
 
-    private LocalDateTime dataAtualizacao;
+    private Status status;
 
-    private Boolean ativo;
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
