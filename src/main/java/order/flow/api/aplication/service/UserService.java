@@ -1,5 +1,6 @@
 package order.flow.api.aplication.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import order.flow.api.domain.repository.UserRepository;
 @Service
 public class UserService {
 
+    @Autowired
     UserRepository userRepository;
 
     public Object register(RegisterDTO dto) {

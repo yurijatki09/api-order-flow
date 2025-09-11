@@ -12,33 +12,32 @@ import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.var;
 import order.flow.api.aplication.dto.LoginDTO;
+import order.flow.api.aplication.dto.LoginResponseDTO;
 import order.flow.api.domain.model.User;
 import order.flow.api.domain.repository.UserRepository;
+import order.flow.api.security.TokenService;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements UserDetailsService {
+public class AuthService {
 
     @Autowired
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    private final UserRepository userRepository;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
-        return userRepository.findByEmail(username);
-    }
+    private TokenService tokenService;
 
     public Object login(LoginDTO dto) {
         // TODO Auto-generated method stub
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
+        var token = tokenService.generateToken((User) auth.getPrincipal());
 
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     
