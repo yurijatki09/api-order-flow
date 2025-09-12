@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +24,11 @@ public class OrderDTO implements Serializable {
 
     private UUID id;
 
+    @JsonIgnore
+    private UUID userId;
+
+    private String userNome;
+
     private List<OrderProductDTO> produtos;
 
     private Integer quantidade;
@@ -34,4 +40,8 @@ public class OrderDTO implements Serializable {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private String mensagem;
+
+    private BigDecimal precoTotal;
 }

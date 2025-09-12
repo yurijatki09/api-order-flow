@@ -1,5 +1,6 @@
 package order.flow.api.domain.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +39,12 @@ public class Order {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "mensagem", length = 700)
+    private String mensagem;
+
+    @Column(name = "total", nullable = false, precision = 19, scale = 2)
+    private BigDecimal precoTotal;
 
     @PrePersist
     public void prePersist() {

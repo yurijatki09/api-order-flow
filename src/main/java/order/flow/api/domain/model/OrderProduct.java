@@ -36,5 +36,5 @@ public class OrderProduct {
     private Integer quantidade;
 
     @NotNull
-    private BigDecimal precoUnitario; // preço do produto na hora do pedido
+    private BigDecimal precoUnitario;
 }
